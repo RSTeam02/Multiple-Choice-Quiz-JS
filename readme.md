@@ -21,3 +21,6 @@ progress:
 + JSONFileReader: parse all objects, callback string output => html preformatted text
 + Shuffle: shuffle quiz, answer orders. (Yates shuffle)
 + view: print all questions with answers as preformatted text in html
+
+github testlink:
+https://rsteam02.github.io/Multiple-Choice-Quiz-JS/
