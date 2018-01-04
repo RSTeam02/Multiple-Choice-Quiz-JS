@@ -1,0 +1,53 @@
+[
+    {
+        "quiz": "99 is equal to:",
+        "answer": {
+            "3*30+3²": "+",
+            "2*33": "-",
+            "11*9": "+"
+        }
+    },   
+    {
+        "quiz": "Which color component(s) contain(s) the RGB color space?",
+        "answer": {
+            "red": "+",
+            "rose": "-",
+            "ruby": "-",
+            "green": "+",
+            "grey": "-",
+            "blue": "+"
+        }
+    },
+    {
+        "quiz": "What is the meaning of \"x++\"/\"x--\"?",
+        "answer": {
+            "it is also known as increment/decrement operator": "+",
+            "it adds/subtracts x by 2": "-",
+            "it's equal to x=x+2/x=x-2": "-",
+            "it adds/subtracts x by 1": "+",
+            "it's equal to x=x+1/x=x-1": "+"
+        }
+    },
+    {
+        "quiz": "What do you know about the C-Language?",
+        "answer": {
+            "the successor of C is the D language": "-",
+            "it's a programming language with object orientation": "-",
+            "it's an imperative programming language": "+",
+            "it was developed by Dennis Ritchie": "+",
+            "it was developed by Bjarne Stroustrup": "-",
+            "the \"hello world\" program gains popularity within the C-language": "+",
+            "C is nowadays still used for OS-Development": "+"
+        }
+    },
+    {
+        "quiz": "What does the \"%\" operator in a programming language?",
+        "answer": {
+            "it is supposed to use for percentage calculation": "-",
+            "it calculates the remainder of a division": "+",
+            "it is also known as the \"modulo\" operator": "+",
+            "1%100=1/100": "-",
+            "1%100=100": "+"
+        }
+    }
+]
