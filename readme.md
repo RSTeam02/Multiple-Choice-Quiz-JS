@@ -1,6 +1,6 @@
 # Multiple Choice Quiz in JavaScript (ECMAScript)
 
-The same task already implemented in C/C++ in a OO language like JS (ECMAScript). The questions are now stored in an array of structured JSON objects as *.json.
+The same task is already implemented in C/C++, now written in an OO language like JS (ECMAScript). The questions are now stored in an array of structured JSON objects as *.json.
 
 structure:
 ```
