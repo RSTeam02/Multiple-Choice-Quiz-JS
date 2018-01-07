@@ -1,6 +1,6 @@
 export class View{
 
-    printAll(quizStr){
+    printQuestion(quizStr){
         $("#quiz").html(quizStr);
     }
 
