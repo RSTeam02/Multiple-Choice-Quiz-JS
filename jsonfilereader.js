@@ -7,7 +7,7 @@
 
 export class JSONFileReader {
 
-    readJSON(rndSwitch) {
+    readJSON() {
         return $.getJSON("quizfile.json").then((data) => {           
             return data;
         });
