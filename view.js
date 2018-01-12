@@ -1,7 +1,20 @@
 export class View{
 
-    printQuestion(quizStr){
-        $("#quiz").html(quizStr);
+    printQuestion(str){
+        $("#question").html(str);
+    }
+
+
+    printAnswer(str){
+        $("#answer").html(str);
+    }
+
+    printSolution(str){
+        $("#solution").html(str);
+    }
+
+    printInfo(str){
+        $("#info").html(str);
     }
 
 }

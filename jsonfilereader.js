@@ -14,11 +14,11 @@ export class JSONFileReader {
 
     }
 
-    set Question(str){
-        this.str = str;
+    set allQuestion(kv){
+        this._kv = kv;
     }
 
-    get Question(){
-        return this.str;
+    get allQuestion(){
+        return this._kv;
     }
 }

@@ -17,7 +17,9 @@ structure:
 ```
 
 progress:
-+ Controller: parse all objects via idx, print question once at time => html preformatted text
++ Player: set/get player name and score
++ Question: question object with question, answer, solution possibilities attributes as string
++ Controller: create new question instance for each question loaded from json fileloader, create player with name and current score, input validation: check if certain char is in solution string, prevent double chars DDDAAABBB => ABD, score rules: 0.25 points per right answer, -0.25 points per wrong answer, 0 pts per non- chosen answer 
 + JSONFileReader: get json from file 
 + Shuffle: shuffle quiz, answer orders. (Yates shuffle)
 + View: print current question with answers as preformatted text in html
