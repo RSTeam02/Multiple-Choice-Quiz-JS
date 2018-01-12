@@ -46,9 +46,10 @@ export class Controller {
             }
             //parse next
             if (e.currentTarget.id === "ok") {
-                if (this.i <= this.reader.allQuestion.length) {
-                    let valid = this.validation();
-                    if (!valid.excluded || this.i === 0) {
+                if (!valid.excluded || this.i === 0) {
+                    if (this.i <= this.reader.allQuestion.length) {
+                        let valid = this.validation();
+
                         this.player.score += this.checkAnswer(valid.str, this.question.solution);
                         if (this.i !== this.reader.allQuestion.length) {
                             this.nextQ(this.shuffleQ[this.i], rndSwitch);
@@ -56,12 +57,13 @@ export class Controller {
                         } else {
                             this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}pts.`);
                         }
-                    } else {
-                        this.view.printInfo(valid.str);
                     }
+                    this.i++;
+                } else {
+                    this.view.printInfo(valid.str);
                 }
                 document.getElementById("charInput").focus();
-                this.i++;
+
                 $("#charInput").val("");
             }
         });
