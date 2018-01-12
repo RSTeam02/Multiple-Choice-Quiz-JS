@@ -26,7 +26,7 @@ export class Controller {
     }
 
     btnListener() {
-        $("#restart, #ok").on('click', (e) => {
+        $("#restart, #ok, #charInput").on('click keypress' , (e) => {
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
@@ -45,11 +45,11 @@ export class Controller {
 
             }
             //parse next
-            if (e.currentTarget.id === "ok") {
-                if (!valid.excluded || this.i === 0) {
-                    if (this.i <= this.reader.allQuestion.length) {
-                        let valid = this.validation();
-
+       
+            if (e.currentTarget.id === "ok" || e.which ==13) {
+                if (this.i <= this.reader.allQuestion.length) {
+                    let valid = this.validation();
+                    if (!valid.excluded || this.i === 0) {
                         this.player.score += this.checkAnswer(valid.str, this.question.solution);
                         if (this.i !== this.reader.allQuestion.length) {
                             this.nextQ(this.shuffleQ[this.i], rndSwitch);
@@ -57,16 +57,21 @@ export class Controller {
                         } else {
                             this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}pts.`);
                         }
+                        this.i++;
+                    } else {
+                        this.view.printInfo(valid.str);
                     }
-                    this.i++;
-                } else {
-                    this.view.printInfo(valid.str);
                 }
                 document.getElementById("charInput").focus();
-
+                
                 $("#charInput").val("");
             }
         });
+
+
+        
+
+
     }
 
     start(rndSwitch) {
