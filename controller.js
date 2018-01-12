@@ -22,7 +22,7 @@ export class Controller {
         $("#ok").hide();
         this.btnListener();
         this.i = 0;
-        
+
     }
 
     btnListener() {
@@ -39,31 +39,35 @@ export class Controller {
                 if (pName !== null || player !== "") {
                     this.player.score = 0;
                     this.player.name = pName;
-                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);                 
+                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                     this.start(rndSwitch);
                 }
-                
+
             }
             //parse next
             if (e.currentTarget.id === "ok") {
-                this.view.printInfo("");
-                if (this.i < this.reader.allQuestion.length) {
+                if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
                         this.player.score += this.checkAnswer(valid.str, this.question.solution);
-                        this.nextQ(this.shuffleQ[this.i++], rndSwitch);                      
-                        this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
+                        if (this.i !== this.reader.allQuestion.length) {
+                            this.nextQ(this.shuffleQ[this.i], rndSwitch);
+                            this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
+                        } else {
+                            this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}pts.`);
+                        }
                     } else {
                         this.view.printInfo(valid.str);
                     }
                 }
+                this.i++;
                 $("#charInput").val("");
             }
         });
     }
 
     start(rndSwitch) {
-        this.i = 0;        
+        this.i = 0;
         this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, rndSwitch.allQuestion);
         this.nextQ(this.shuffleQ[this.i++], rndSwitch);
     }
@@ -116,15 +120,17 @@ export class Controller {
         this.question.answer = answerKey;
         this.question.possibility = answerKey.length;
         this.question.solution = answerVal;
-        this.view.printQuestion(this.question._question);
+        this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
     }
 
     checkAnswer(input, solution) {
         let pts = 0;
-        let right = 0;     
-        let inputArr = input.split("");       
-        for (let i = 0; i<inputArr.length; i++) {
+        let right = 0;
+        let inputArr = input.split("");
+        console.log(input)
+        console.log(solution)
+        for (let i = 0; i < inputArr.length; i++) {
             if (solution.includes(inputArr[i])) {
                 right++;
             } else {
