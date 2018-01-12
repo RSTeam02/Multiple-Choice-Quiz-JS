@@ -60,6 +60,7 @@ export class Controller {
                         this.view.printInfo(valid.str);
                     }
                 }
+                document.getElementById("charInput").focus();
                 this.i++;
                 $("#charInput").val("");
             }
