@@ -4,6 +4,8 @@ export class Question {
         this._answer = "";
         this._solution = "";
         this._possibility = "";
+        this._maxPts = 0;
+        this._maxScore = 0;
     }
 
 
@@ -54,5 +56,32 @@ export class Question {
 
     get solution() {
         return this._solution;
+    }
+
+    set maxPts(solution) {
+        for (let x = 0; x < solution.length; x++) {
+            if (solution[this._aShuffle[x]] === '+') {
+                this._maxPts += .25;
+            }
+        }
+    }
+
+    get maxPts() {
+        return this._maxPts;
+    }
+
+    set maxScore(allQ) {        
+        for (let x = 0; x < allQ.length; x++) {
+            let answerVal = Object.values(allQ[x].answer);                     
+            for (let y = 0; y < answerVal.length; y++) {           
+                if (answerVal[y] === '+') {
+                    this._maxScore += .25;                   
+                }
+            }
+        }
+    }
+
+    get maxScore() {
+        return this._maxScore;
     }
 }

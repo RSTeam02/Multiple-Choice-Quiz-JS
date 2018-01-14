@@ -18,62 +18,72 @@ export class Controller {
         this.view = new View();
         this.rnd = new Shuffle();
         this.player = new Player();
-        this.readFile();
-        $("#ok").hide();
+        this.readFile();       
         this.btnListener();
         this.i = 0;
+        this.cnt =0;
 
     }
 
     btnListener() {
-        $("#restart, #ok, #charInput").on('click keypress' , (e) => {
+        $("#restart, #charInput").on('click keypress' , (e) => {
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
             };
-
-            //rewind
-            if (e.currentTarget.id === "restart") {
-                $("#ok").show();
+            //reset
+            if (e.currentTarget.id === "restart") {                
                 var pName = prompt("Enter your name: ", "Player1");
                 if (pName !== null || player !== "") {
                     this.player.score = 0;
                     this.player.name = pName;
                     this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                     this.start(rndSwitch);
+                    
                 }
-
             }
-            //parse next
-       
-            if (e.currentTarget.id === "ok" || e.which ==13) {
+            //parse next       
+            if (e.which ==13) {
+                
                 if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
-                        this.player.score += this.checkAnswer(valid.str, this.question.solution);
-                        if (this.i !== this.reader.allQuestion.length) {
-                            this.nextQ(this.shuffleQ[this.i], rndSwitch);
-                            this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
-                        } else {
-                            this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}pts.`);
-                        }
-                        this.i++;
+                        let pts = this.checkAnswer(valid.str, this.question.solution)                       
+                        this.startCount(5);
+                        let delayNext = setTimeout(()=>{
+                            this.view.printSum("");
+                            this.player.score += pts;
+                            if (this.i !== this.reader.allQuestion.length) {
+                                this.nextQ(this.shuffleQ[this.i], rndSwitch);
+                                this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
+                            } else {
+                                this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
+                            }
+                            this.i++;
+                        }, 5000);
+                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts}/${this.question.maxPts}`);
+                       
                     } else {
                         this.view.printInfo(valid.str);
                     }
                 }
-                document.getElementById("charInput").focus();
-                
+                document.getElementById("charInput").focus();                
                 $("#charInput").val("");
             }
         });
-
-
-        
-
-
     }
 
+    startCount(cnt){      
+        this.view.printDelay(`Next question in: ${cnt}`);        
+        if(cnt!==0){  
+            setTimeout(()=>{
+                this.startCount(cnt);
+            }, 1000);
+        }else{
+            this.view.printDelay("");
+        }
+        cnt--; 
+    }
     start(rndSwitch) {
         this.i = 0;
         this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, rndSwitch.allQuestion);
@@ -101,7 +111,6 @@ export class Controller {
                 }
                 res.excluded = true;
             }
-
         }
         if (!res.excluded) {
             for (let i = 0; i < charInput.length; i++) {
@@ -128,6 +137,8 @@ export class Controller {
         this.question.answer = answerKey;
         this.question.possibility = answerKey.length;
         this.question.solution = answerVal;
+        this.question.maxPts = answerVal;
+        this.question.maxScore = allQ;        
         this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
     }
@@ -135,23 +146,15 @@ export class Controller {
     checkAnswer(input, solution) {
         let pts = 0;
         let right = 0;
-        let inputArr = input.split("");
-        console.log(input)
-        console.log(solution)
-        for (let i = 0; i < inputArr.length; i++) {
-            if (solution.includes(inputArr[i])) {
-                right++;
-            } else {
-                right--;
-            }
+        let inputArr = input.split("");        
+        for (let i = 0; i < inputArr.length; i++) {       
+            right += (solution.includes(inputArr[i])) ? 1 : -1;
         }
         pts = .25 * right;
         if (pts < 0) {
             pts = 0;
         }
-
         return pts;
-
     }
 
 }

@@ -17,4 +17,12 @@ export class View{
         $("#info").html(str);
     }
 
+    printDelay(str){
+        $("#cntDelay").html(str);
+    }
+
+    printSum(str){
+        $("#summary").html(str);
+    }
+
 }
