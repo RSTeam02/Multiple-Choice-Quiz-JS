@@ -102,8 +102,9 @@ export class Controller {
                     }
                 }                
                 $("#charInput").val("");
-                document.getElementById("charInput").focus();
+                
             }
+            $("#charInput").focus();
         });
     }
 
