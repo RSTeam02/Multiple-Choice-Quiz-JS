@@ -19,9 +19,10 @@ structure:
 progress:
 
 14.1.:
-+ player input triggered on input text with enter (keycode 13)
-+ after every answered question show result: player input/solution and achieved/max points with a delay of ~5secs, then goto next quiz
-+ summarize player's score with player's achieved/max achievable score 
++ trigger player input text with enter (keycode 13)
++ return result after each answered question: player input/solution and achieved/max points with a delay of ~5secs, then goto next quiz
++ resume input, achieved points of every question and compare with solution (15.1)
++ compare sum of achieved score with max achievable score at the end of game (15.1)
 
 classes:
 + Player: set/get player name and score (12.1)

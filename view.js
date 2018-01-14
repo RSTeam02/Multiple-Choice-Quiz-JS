@@ -1,28 +1,61 @@
-export class View{
+export class View {
 
-    printQuestion(str){
+    printQuestion(str) {
         $("#question").html(str);
     }
 
 
-    printAnswer(str){
+    printAnswer(str) {
         $("#answer").html(str);
     }
 
-    printSolution(str){
+    printSolution(str) {
         $("#solution").html(str);
     }
 
-    printInfo(str){
+    printInfo(str) {
         $("#info").html(str);
     }
 
-    printDelay(str){
+    printDelay(str) {
         $("#cntDelay").html(str);
     }
 
-    printSum(str){
+    printSum(str) {
         $("#summary").html(str);
+    }
+
+    printEndRes(strArr) {
+        let str = "";
+        if (strArr !== null) {
+            str += `<tr>
+            <th>Question</th>
+            <th>Input</th> 
+            <th>Solution</th> 
+            <th>Right</th> 
+            <th>Wrong</th>
+            <th>Score</th>
+        </tr>`;
+
+            for (let i = 0; i < strArr.length; i++) {
+                str += `<tr>
+                    <td>Q${i + 1}</td>
+                    <td>${strArr[i].input}</td> 
+                    <td>${strArr[i].solution}</td> 
+                    <td>${strArr[i].right}/${strArr[i].solution.length}</td> 
+                    <td>${strArr[i].wrong}</td>
+                    <td>${strArr[i].pts}/${strArr[i].maxPts}</td>
+                </tr>`;
+                if (i === strArr.length - 1) {
+                    str += `<tr>                
+                        <td></td><td></td><td></td><td></td><td></td>
+                        <td>${strArr[i].sumScore}/${strArr[i].maxScore}</td>
+                    </tr>`;
+                }
+            }
+        }
+
+        $("#endResult").html(str);
     }
 
 }

@@ -17,72 +17,104 @@ export class Controller {
         this.reader = new JSONFileReader();
         this.view = new View();
         this.rnd = new Shuffle();
-        this.player = new Player();
-        this.readFile();       
+        this.player = new Player();        
+        this.readFile();
+        this.summary = [];
         this.btnListener();
         this.i = 0;
-        this.cnt =0;
+        this.cnt = 0;
 
     }
 
     btnListener() {
-        $("#restart, #charInput").on('click keypress' , (e) => {
+        $("#restart, #charInput, #reset").on('click keypress', (e) => {
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
             };
+
             //reset
-            if (e.currentTarget.id === "restart") {                
+            if (e.currentTarget.id === "reset") {
+                if(confirm("Start a new quiz?") === true){
+                    $("input[name='shuffle']").prop("disabled", false);
+                    $("#restart").prop("disabled",false);
+                    this.view.printQuestion("");           
+                    this.view.printAnswer("");             
+                    this.view.printSolution("");                 
+                    this.view.printInfo("");             
+                    this.view.printDelay("");            
+                    this.view.printSum("");         
+                    this.view.printEndRes(null);
+                    $("#charInput").prop("disabled",true);                   
+                }               
+            }
+            
+            //start
+            if (e.currentTarget.id === "restart") {
+                $("input[name='shuffle']").prop("disabled", true);
+                $("#restart").prop("disabled",true);
                 var pName = prompt("Enter your name: ", "Player1");
-                if (pName !== null || player !== "") {
+                if (pName !== null) {                
                     this.player.score = 0;
                     this.player.name = pName;
-                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
+                    $("#charInput").prop("disabled",false);
                     this.start(rndSwitch);
-                    
+                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);              
                 }
             }
             //parse next       
-            if (e.which ==13) {
-                
+            if (e.which == 13) {
+                $("#charInput").prop("disabled",true);
                 if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
-                        let pts = this.checkAnswer(valid.str, this.question.solution)                       
+                        let pts = this.checkAnswer(valid.str, this.question.solution)
                         this.startCount(5);
-                        let delayNext = setTimeout(()=>{
+                        let delayNext = setTimeout(() => {
                             this.view.printSum("");
-                            this.player.score += pts;
+                            this.player.score += pts.pts;
+                            this.summary.push({
+                                input: valid.str,
+                                solution: this.question.solution,
+                                right: pts.right,
+                                wrong: pts.wrong,
+                                pts: pts.pts,
+                                maxPts: this.question.maxPts,
+                                sumScore: this.player.score,
+                                maxScore: this.question.maxScore
+                            });
                             if (this.i !== this.reader.allQuestion.length) {
                                 this.nextQ(this.shuffleQ[this.i], rndSwitch);
+                                $("#charInput").prop("disabled",false);
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
-                            } else {
+                            } else {                               
                                 this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
+                                this.view.printEndRes(this.summary);
                             }
                             this.i++;
                         }, 5000);
-                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts}/${this.question.maxPts}`);
-                       
+                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
+                        
                     } else {
                         this.view.printInfo(valid.str);
                     }
                 }
-                document.getElementById("charInput").focus();                
+                document.getElementById("charInput").focus();
                 $("#charInput").val("");
             }
         });
     }
 
-    startCount(cnt){      
-        this.view.printDelay(`Next question in: ${cnt}`);        
-        if(cnt!==0){  
-            setTimeout(()=>{
+    startCount(cnt) {
+        this.view.printDelay(`Next question in: ${cnt}`);
+        if (cnt !== 0) {
+            setTimeout(() => {
                 this.startCount(cnt);
             }, 1000);
-        }else{
+        } else {
             this.view.printDelay("");
         }
-        cnt--; 
+        cnt--;
     }
     start(rndSwitch) {
         this.i = 0;
@@ -138,23 +170,30 @@ export class Controller {
         this.question.possibility = answerKey.length;
         this.question.solution = answerVal;
         this.question.maxPts = answerVal;
-        this.question.maxScore = allQ;        
+        this.question.maxScore = allQ;
         this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
     }
 
     checkAnswer(input, solution) {
-        let pts = 0;
-        let right = 0;
-        let inputArr = input.split("");        
-        for (let i = 0; i < inputArr.length; i++) {       
-            right += (solution.includes(inputArr[i])) ? 1 : -1;
+        let sum = {
+            pts: 0,
+            right: 0,
+            wrong: 0
         }
-        pts = .25 * right;
-        if (pts < 0) {
-            pts = 0;
+        let inputArr = input.split("");
+        for (let i = 0; i < inputArr.length; i++) {
+            if (solution.includes(inputArr[i])) {
+                sum.right++;
+            } else {
+                sum.wrong++;
+            }
         }
-        return pts;
+        sum.pts = .25 * (sum.right - sum.wrong);
+        if (sum.pts < 0) {
+            sum.pts = 0;
+        }
+        return sum;
     }
 
 }
