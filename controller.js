@@ -96,10 +96,10 @@ export class Controller {
                         this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
                         
                     } else {
+                        $("#charInput").prop("disabled",false);
                         this.view.printInfo(valid.str);
                     }
-                }
-                document.getElementById("charInput").focus();
+                }                
                 $("#charInput").val("");
             }
         });
@@ -112,6 +112,7 @@ export class Controller {
                 this.startCount(cnt);
             }, 1000);
         } else {
+            document.getElementById("charInput").focus();
             this.view.printDelay("");
         }
         cnt--;
