@@ -102,6 +102,7 @@ export class Controller {
                     }
                 }                
                 $("#charInput").val("");
+                document.getElementById("charInput").focus();
             }
         });
     }
@@ -113,7 +114,7 @@ export class Controller {
                 this.startCount(cnt);
             }, 1000);
         } else {
-            document.getElementById("charInput").focus();
+            
             this.view.printDelay("");
         }
         cnt--;
