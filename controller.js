@@ -17,7 +17,8 @@ export class Controller {
         this.reader = new JSONFileReader();
         this.view = new View();
         this.rnd = new Shuffle();
-        this.player = new Player();        
+        this.player = new Player(); 
+        $("#charInput").prop("disabled",true);       
         this.readFile();
         this.summary = [];
         this.btnListener();
