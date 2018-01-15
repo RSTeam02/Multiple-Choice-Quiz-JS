@@ -39,6 +39,7 @@ export class Controller {
                 if(confirm("Start a new quiz?") === true){
                     $("input[name='shuffle']").prop("disabled", false);
                     $("#restart").prop("disabled",false);
+                    this.summary = [];
                     this.view.printQuestion("");           
                     this.view.printAnswer("");             
                     this.view.printSolution("");                 
