@@ -114,7 +114,7 @@ export class Controller {
             }, 1000);
         } else {            
             this.view.printDelay("");
-            //$("#charInput").focus();
+            $("#charInput").focus();
         }
         cnt--;
     }
