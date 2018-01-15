@@ -52,11 +52,11 @@ export class Controller {
             }
             
             //start
-            if (e.currentTarget.id === "restart") {
-                $("input[name='shuffle']").prop("disabled", true);
-                $("#restart").prop("disabled",true);
+            if (e.currentTarget.id === "restart") {                
                 var pName = prompt("Enter your name: ", "Player1");
-                if (pName !== null) {                
+                if (pName !== null) { 
+                    $("input[name='shuffle']").prop("disabled", true);
+                    $("#restart").prop("disabled",true);               
                     this.player.score = 0;
                     this.player.name = pName;
                     $("#charInput").prop("disabled",false);
