@@ -27,7 +27,7 @@ export class View {
 
     printEndRes(strArr) {
         let str = "";
-        if (strArr !== null) {
+        if (strArr !== undefined) {
             str += `<tr>
             <th>Question</th>
             <th>Input</th> 

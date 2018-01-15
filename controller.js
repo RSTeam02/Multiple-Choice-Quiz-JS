@@ -45,7 +45,7 @@ export class Controller {
                     this.view.printInfo("");             
                     this.view.printDelay("");            
                     this.view.printSum("");         
-                    this.view.printEndRes(null);
+                    this.view.printEndRes(undefined);
                     $("#charInput").prop("disabled",true);                   
                 }               
             }
@@ -94,15 +94,13 @@ export class Controller {
                             }
                             this.i++;
                         }, 5000);
-                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
-                        
+                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);                        
                     } else {
                         $("#charInput").prop("disabled",false);
                         this.view.printInfo(valid.str);
                     }
                 }                
-                $("#charInput").val("");
-                
+                $("#charInput").val("");                
             }
             $("#charInput").focus();
         });
@@ -114,8 +112,7 @@ export class Controller {
             setTimeout(() => {
                 this.startCount(cnt);
             }, 1000);
-        } else {
-            
+        } else {            
             this.view.printDelay("");
         }
         cnt--;
