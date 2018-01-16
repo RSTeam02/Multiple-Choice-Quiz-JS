@@ -18,6 +18,11 @@ structure:
 
 progress:
 
+16.1.:
++ include click listener with tracking devices (mouse, touchscreen)
++ answer possibilities now as clickable table row elements
++ repeat click of same element like a switch to include/exclude given answer
+
 14.1.:
 + trigger player input text with enter (keycode 13)
 + return result after each answered question: player input/solution and achieved/max points with a delay of ~5secs, then goto next quiz

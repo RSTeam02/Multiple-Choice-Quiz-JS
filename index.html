@@ -5,11 +5,19 @@
     <meta charset="utf-8">
     <title>Multiple-Choice Quiz Test</title>
     <style>
-        td{
-            text-align: right;
+        td{        
             border: 1px solid;
+            cursor: pointer;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;            
         }
-        th, table{
+        #answer{            
+            border-spacing: 0 .25em;
+            
+        }
+        th, #endResult{
             border: 1px solid;
         }
     </style>
@@ -25,12 +33,12 @@
     <input type="button" id="reset" value="Reset">
     <input type="button" id="restart" value="Start">
     
-    <pre id="question"></pre>
-    <pre id="answer"></pre>    
+    <h3 id="question"></h3>
+    <table id="answer"></table>    
     <pre id="solution"></pre>
     <pre id="result"></pre>
     <pre id="info"></pre>
-    <pre style="display: inline">Answer Input: </pre><input type="text" id="charInput" autofocus>
+    <pre style="display: inline">Answer Input: </pre><input type="text" id="charInput" autofocus><input type="button" id="ok" value="OK">
     <pre id="summary"></pre>
     <pre id="cntDelay"></pre>
     <table id="endResult"></table>  

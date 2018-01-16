@@ -17,18 +17,20 @@ export class Controller {
         this.reader = new JSONFileReader();
         this.view = new View();
         this.rnd = new Shuffle();
-        this.player = new Player(); 
-        $("#charInput").prop("disabled",true);       
+        this.player = new Player();
+        $("#charInput").prop("disabled", true);
         this.readFile();
         this.summary = [];
         this.btnListener();
         this.i = 0;
         this.cnt = 0;
+        this.letterStr = "";
 
     }
 
     btnListener() {
-        $("#restart, #charInput, #reset").on('click keypress', (e) => {
+
+        $("#restart, #charInput, #reset, #ok").on('click keypress', (e) => {
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
@@ -36,37 +38,40 @@ export class Controller {
 
             //reset
             if (e.currentTarget.id === "reset") {
-                if(confirm("Start a new quiz?") === true){
+                if (confirm("Start a new quiz?") === true) {
+                    this.letterStr = "";
                     $("input[name='shuffle']").prop("disabled", false);
-                    $("#restart").prop("disabled",false);
+                    $("#restart").prop("disabled", false);
                     this.summary = [];
-                    this.view.printQuestion("");           
-                    this.view.printAnswer("");             
-                    this.view.printSolution("");                 
-                    this.view.printInfo("");             
-                    this.view.printDelay("");            
-                    this.view.printSum("");         
+                    this.view.printQuestion("");
+                    this.view.printAnswer("");
+                    this.view.printSolution("");
+                    this.view.printInfo("");
+                    this.view.printDelay("");
+                    this.view.printSum("");
                     this.view.printEndRes(undefined);
-                    $("#charInput").prop("disabled",true);                   
-                }               
+                    $("#charInput").prop("disabled", true);
+                }
             }
-            
+
             //start
-            if (e.currentTarget.id === "restart") {                
+            if (e.currentTarget.id === "restart") {
                 var pName = prompt("Enter your name: ", "Player1");
-                if (pName !== null) { 
+                if (pName !== null) {
                     $("input[name='shuffle']").prop("disabled", true);
-                    $("#restart").prop("disabled",true);               
+                    $("#restart").prop("disabled", true);
                     this.player.score = 0;
                     this.player.name = pName;
-                    $("#charInput").prop("disabled",false);
+                    $("#charInput").prop("disabled", false);
                     this.start(rndSwitch);
-                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);              
+                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                 }
             }
             //parse next       
-            if (e.which == 13) {
-                $("#charInput").prop("disabled",true);
+            if (e.which == 13 || e.currentTarget.id === "ok") {
+                this.letterStr = "";
+                $(".ansPos").off('click');
+                $("#charInput").prop("disabled", true);
                 if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
@@ -87,24 +92,36 @@ export class Controller {
                             });
                             if (this.i !== this.reader.allQuestion.length) {
                                 this.nextQ(this.shuffleQ[this.i], rndSwitch);
-                                $("#charInput").prop("disabled",false);
+                                $("#charInput").prop("disabled", false);
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
-                            } else {                               
+                            } else {
+                                $(".ansPos").off('click');
                                 this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
                                 this.view.printEndRes(this.summary);
                             }
                             this.i++;
                         }, 5000);
-                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);                        
+                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
                     } else {
-                        $("#charInput").prop("disabled",false);
+                        $("#charInput").prop("disabled", false);
                         this.view.printInfo(valid.str);
                     }
-                }                
-                $("#charInput").val("");                
+                }
+                $("#charInput").val("");
             }
             $("#charInput").focus();
         });
+    }
+
+    clickNext(target) {       
+        if (this.letterStr.includes(target.getAttribute("value"))) {
+            this.letterStr = this.letterStr.replace(new RegExp(target.getAttribute("value"), "g"), "");
+            $(target).css("background-color", "transparent");
+        } else {
+            this.letterStr += target.getAttribute("value");
+            $(target).css("background-color", "lightgreen");            
+        }
+        $("#charInput").val(this.letterStr.split("").sort().join(""));
     }
 
     startCount(cnt) {
@@ -113,7 +130,7 @@ export class Controller {
             setTimeout(() => {
                 this.startCount(cnt);
             }, 1000);
-        } else {            
+        } else {
             this.view.printDelay("");
             $("#charInput").focus();
         }
@@ -176,6 +193,9 @@ export class Controller {
         this.question.maxScore = allQ;
         this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
+        $(".ansPos").on('click', (e) => {
+            this.clickNext(e.currentTarget);
+        });
     }
 
     checkAnswer(input, solution) {

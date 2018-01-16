@@ -24,7 +24,8 @@ export class Question {
     set answer(answer) {
         this._AtoZ = 0x0061;
         for (let x = 0; x < answer.length; x++) {
-            this._answer += `${String.fromCodePoint(this._AtoZ).toUpperCase()}: ${answer[this._aShuffle[x]]}\n`;
+            let decodeAZ = String.fromCodePoint(this._AtoZ).toUpperCase();
+            this._answer += `<tr><td class="ansPos" value="${decodeAZ}">${decodeAZ}: ${answer[this._aShuffle[x]]}</td><tr>`;
             this._AtoZ++;
         }
     }
