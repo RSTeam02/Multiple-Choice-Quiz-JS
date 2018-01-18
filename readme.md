@@ -18,6 +18,10 @@ structure:
 
 progress:
 
+18.1.:
++ browse/load custom json quizfile from local disk 
++ structure (see above of quizfile.json)  
+
 16.1.:
 + include click listener with tracking devices (mouse, touchscreen)
 + answer possibilities now as clickable table row elements

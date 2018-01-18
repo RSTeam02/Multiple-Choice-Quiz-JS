@@ -12,8 +12,7 @@ import { Player } from "./player.js";
 import { Question } from "./question.js";
 
 export class Controller {
-    constructor() {
-
+    constructor() {        
         this.reader = new JSONFileReader();
         this.view = new View();
         this.rnd = new Shuffle();
@@ -28,9 +27,16 @@ export class Controller {
 
     }
 
-    btnListener() {
 
-        $("#restart, #charInput, #reset, #ok").on('click keypress', (e) => {
+    btnListener() {
+        //browse file to upload
+        $("#read").on('change', () => {
+            this.reader.jsonLoader((res) => {
+                this.reader.allQuestion = JSON.parse(res);
+            });
+        });
+
+        $(".UIBtn").on('click keypress', (e) => {
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
@@ -54,7 +60,7 @@ export class Controller {
                 }
             }
 
-            //start
+            //(re)start
             if (e.currentTarget.id === "restart") {
                 var pName = prompt("Enter your name: ", "Player1");
                 if (pName !== null) {
@@ -113,13 +119,13 @@ export class Controller {
         });
     }
 
-    clickNext(target) {       
+    clickNext(target) {
         if (this.letterStr.includes(target.getAttribute("value"))) {
             this.letterStr = this.letterStr.replace(new RegExp(target.getAttribute("value"), "g"), "");
             $(target).css("background-color", "transparent");
         } else {
             this.letterStr += target.getAttribute("value");
-            $(target).css("background-color", "lightgreen");            
+            $(target).css("background-color", "lightgreen");
         }
         $("#charInput").val(this.letterStr.split("").sort().join(""));
     }
@@ -148,6 +154,10 @@ export class Controller {
         });
     }
 
+    /**    
+     * check if one or many char(s) from user is in the set of char(s) assigned to answers, else repeat input
+     * filter double entered chars (aeeae => AE)    
+     */ 
     validation() {
         let plInput = document.getElementById("charInput").value;
         let charInput = plInput.toUpperCase().split("").sort();
@@ -174,7 +184,7 @@ export class Controller {
         return res;
     }
 
-    //parse answer, solution from json via index, shuffle position if true
+    //parse question, answer, solution from json via index, shuffle position if true
     nextQ(qNo, rndSwitch) {
         let allQ = this.reader.allQuestion;
         let answerPos = "";
@@ -198,6 +208,13 @@ export class Controller {
         });
     }
 
+    /**
+     *      
+     * per right answer: 0.25pts
+     * per right answer: -0.25pts
+     * per no answer: 0pts
+     *  
+     */
     checkAnswer(input, solution) {
         let sum = {
             pts: 0,
