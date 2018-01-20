@@ -30,13 +30,13 @@ export class Controller {
 
     btnListener() {
         //browse file to upload
-        $("#read").on('change', () => {
+        $("#readFile").on('change', () => {
             this.reader.jsonLoader((res) => {
                 this.reader.allQuestion = JSON.parse(res);
             });
         });
 
-        $(".UIBtn").on('click keypress', (e) => {
+        $(".UIBtn, #restart").on('click keypress', (e) => {
             this.view.errInfo("");
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
@@ -58,13 +58,16 @@ export class Controller {
                     this.view.printSum("");
                     this.view.printEndRes(undefined);
                     $("#charInput").prop("disabled", true);
+                    $("#readFile").prop("disabled", false);
+                    
                 }
             }
 
             //(re)start
             if (e.currentTarget.id === "restart") {
-                var pName = prompt("Enter your name: ", "Player1");
+                var pName = prompt("Enter your name: ", "Player1");                
                 if (pName !== null) {
+                    $("#readFile").prop("disabled", true);
                     $("input[name='shuffle']").prop("disabled", true);
                     $("#restart").prop("disabled", true);
                     this.player.score = 0;
@@ -101,8 +104,8 @@ export class Controller {
                                 this.nextQ(this.shuffleQ[this.i], rndSwitch);
                                 $(".UIBtn").prop("disabled", false);                    
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
-                            } else {
-                               
+                            } else { 
+                                $("#reset").prop("disabled", false);                                   
                                 this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
                                 this.view.printEndRes(this.summary);
                             }                            
