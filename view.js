@@ -17,6 +17,10 @@ export class View {
         $("#info").html(str);
     }
 
+    errInfo(str) {
+        $("#errInfo").html(str);
+    }
+
     printDelay(str) {
         $("#cntDelay").html(str);
     }

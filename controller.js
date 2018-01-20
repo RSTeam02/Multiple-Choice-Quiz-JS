@@ -37,6 +37,7 @@ export class Controller {
         });
 
         $(".UIBtn").on('click keypress', (e) => {
+            this.view.errInfo("");
             let rndSwitch = {
                 allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
                 answer: ($('#aShuffle').is(':checked')) ? true : false
@@ -109,8 +110,9 @@ export class Controller {
                         }, 5000);
                         this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
                     } else {
-                        $(".UIBtn").prop("disabled", false);                       
-                        this.view.printInfo(valid.str);
+                        $(".UIBtn").prop("disabled", false);
+                        $(".ansPos").css("background-color", "transparent");                       
+                        this.view.errInfo(valid.str);
                     }
                 }
                 $("#charInput").val("");
@@ -205,6 +207,7 @@ export class Controller {
         this.view.printAnswer(this.question.answer);
         $(".ansPos").on('click', (e) => {
             this.clickNext(e.currentTarget);
+            this.view.errInfo("");
         });
     }
 
