@@ -77,7 +77,7 @@ export class Controller {
             if (e.which == 13 || e.currentTarget.id === "ok") {
                 this.letterStr = "";
                 $(".ansPos").off('click');
-                $("#charInput").prop("disabled", true);
+                $(".UIBtn").prop("disabled", true);                
                 if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
@@ -98,7 +98,7 @@ export class Controller {
                             });
                             if (this.i !== this.reader.allQuestion.length) {
                                 this.nextQ(this.shuffleQ[this.i], rndSwitch);
-                                $("#charInput").prop("disabled", false);
+                                $(".UIBtn").prop("disabled", false);                    
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                             } else {
                                 $(".ansPos").off('click');
@@ -109,7 +109,8 @@ export class Controller {
                         }, 5000);
                         this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
                     } else {
-                        $("#charInput").prop("disabled", false);
+                        $(".UIBtn").prop("disabled", false);
+                        $(".ansPos").on('click');
                         this.view.printInfo(valid.str);
                     }
                 }
