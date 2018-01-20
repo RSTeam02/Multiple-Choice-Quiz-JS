@@ -52,8 +52,8 @@ export class View {
                 </tr>`;
                 if (i === strArr.length - 1) {
                     str += `<tr>                
-                        <td></td><td></td><td></td><td></td><td></td>
-                        <td>${strArr[i].sumScore}/${strArr[i].maxScore}</td>
+                        <td>Total:</td>
+                        <td align="right" colspan="75%">${strArr[i].sumScore}/${strArr[i].maxScore}</td>
                     </tr>`;
                 }
             }

@@ -21,7 +21,7 @@ export class Controller {
         this.readFile();
         this.summary = [];
         this.firstInit();
-        this.btnListener();
+        this.btnListener();    
         this.i = 0;
         this.cnt = 0;
         this.letterStr = "";
@@ -33,7 +33,7 @@ export class Controller {
         $("input[name='shuffle']").prop("disabled", false);
         $("#restart").prop("disabled", false);
         $("#charInput, #ok").prop("disabled", true);
-        $("#readFile").prop("disabled", false);
+        $("#readFile").prop("disabled", false);        
         this.summary = [];
         this.view.printQuestion("");
         this.view.printAnswer("");
@@ -44,13 +44,7 @@ export class Controller {
         this.view.printEndRes(undefined);
     }
 
-
-
-    btnListener() {
-        let rndSwitch = {
-            allQuestion: ($('#qShuffle').is(':checked')) ? true : false,
-            answer: ($('#aShuffle').is(':checked')) ? true : false
-        };
+    btnListener() {       
 
         $("#reset").on('click keypress', (e) => {
             if (confirm("Start a new quiz?") === true) {
@@ -63,7 +57,6 @@ export class Controller {
                 this.reader.allQuestion = JSON.parse(res);
             });
         });
-
 
         $("#ok, #charInput").on('click keypress', (e) => {
             this.view.errInfo("");
@@ -91,7 +84,7 @@ export class Controller {
                                 maxScore: this.question.maxScore
                             });
                             if (this.i !== this.reader.allQuestion.length) {
-                                this.nextQ(this.shuffleQ[this.i], rndSwitch);
+                                this.nextQ(this.shuffleQ[this.i]);
                                 $("#reset, #ok, #charInput").prop("disabled", false);
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                             } else {
@@ -126,7 +119,7 @@ export class Controller {
                     this.player.score = 0;
                     this.player.name = pName;
                     $("#charInput, #ok").prop("disabled", false);
-                    this.start(rndSwitch);
+                    this.start();
                     this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                 }
             }
@@ -157,10 +150,10 @@ export class Controller {
         }
         cnt--;
     }
-    start(rndSwitch) {
-        this.i = 0;
-        this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, rndSwitch.allQuestion);
-        this.nextQ(this.shuffleQ[this.i++], rndSwitch);
+    start() {
+        this.i = 0;        
+        this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, ($('#qShuffle').is(':checked')) ? true : false);
+        this.nextQ(this.shuffleQ[this.i++]);
     }
 
     readFile() {
@@ -200,7 +193,7 @@ export class Controller {
     }
 
     //parse question, answer, solution from json via index, shuffle position if true
-    nextQ(qNo, rndSwitch) {
+    nextQ(qNo) {        
         let allQ = this.reader.allQuestion;
         let answerPos = "";
         let solution = "";
@@ -209,7 +202,7 @@ export class Controller {
         let answerKey = Object.keys(answer);
         let answerVal = Object.values(answer);
         this.question = new Question();
-        this.question.aShuffle = this.rnd.randPos(answerKey.length, rndSwitch.answer);
+        this.question.aShuffle = this.rnd.randPos(answerKey.length, ($('#aShuffle').is(':checked')) ? true : false);
         this.question.question = question;
         this.question.answer = answerKey;
         this.question.possibility = answerKey.length;
