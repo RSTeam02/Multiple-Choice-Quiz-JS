@@ -90,12 +90,12 @@ export class Controller {
                             if (this.i !== this.reader.allQuestion.length) {
                                 this.nextQ(this.shuffleQ[this.i]);
                                 $("#reset, #ok, #charInput").prop("disabled", false);
-                                this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
+                                this.view.printInfo(`${this.player.name}'s score: ${Math.round(this.player.score * 100) / 100}pts.`);
                             } else {
                                 $("#reset").prop("disabled", false);
-                                this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
+                                this.view.printInfo(`${this.player.name}'s final score: ${Math.round(this.player.score * 100) / 100}/${this.question.maxScore}`);
                                 this.view.printEndRes(this.summary);
-                            }
+                            }                         
                             this.i++;
                         }, 5000);
                         this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${Math.round(pts.pts * 100) / 100}/${this.question.maxPts}`);

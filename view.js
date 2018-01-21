@@ -57,7 +57,7 @@ export class View {
                         <td>Total</td>
                         <td colspan="4%"></td>
                         <td>${Math.round(strArr[i].avgPercent * 100) / 100}%</td>
-                        <td>${strArr[i].sumScore}/${strArr[i].maxScore}</td>
+                        <td>${Math.round(strArr[i].sumScore * 100) / 100}/${strArr[i].maxScore}</td>
                     </tr>`;
                 }
             }
