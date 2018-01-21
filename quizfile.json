@@ -1,6 +1,7 @@
 [
     {
         "quiz": "99 is equal to:",
+        "points": 1,
         "answer": {
             "3*30+3²": "+",
             "2*33": "-",
@@ -9,6 +10,7 @@
     },   
     {
         "quiz": "Which color component(s) contain(s) the RGB color space?",
+        "points": 1.5,
         "answer": {
             "red": "+",
             "rose": "-",
@@ -20,6 +22,7 @@
     },
     {
         "quiz": "What is the meaning of \"x++\"/\"x--\"?",
+        "points": 1.5,
         "answer": {
             "it is also known as increment/decrement operator": "+",
             "it adds/subtracts x by 2": "-",
@@ -30,6 +33,7 @@
     },
     {
         "quiz": "What do you know about the C-Language?",
+        "points": 2,
         "answer": {
             "the successor of C is the D language": "-",
             "it's a programming language with object orientation": "-",
@@ -42,6 +46,7 @@
     },
     {
         "quiz": "What does the \"%\" operator in a programming language?",
+        "points": 1.5,
         "answer": {
             "it is supposed to use for percentage calculation": "-",
             "it calculates the remainder of a division": "+",

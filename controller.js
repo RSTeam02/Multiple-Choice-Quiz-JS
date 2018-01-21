@@ -21,7 +21,7 @@ export class Controller {
         this.readFile();
         this.summary = [];
         this.firstInit();
-        this.btnListener();    
+        this.btnListener();
         this.i = 0;
         this.cnt = 0;
         this.letterStr = "";
@@ -33,7 +33,7 @@ export class Controller {
         $("input[name='shuffle']").prop("disabled", false);
         $("#restart").prop("disabled", false);
         $("#charInput, #ok").prop("disabled", true);
-        $("#readFile").prop("disabled", false);        
+        $("#readFile").prop("disabled", false);
         this.summary = [];
         this.view.printQuestion("");
         this.view.printAnswer("");
@@ -44,7 +44,7 @@ export class Controller {
         this.view.printEndRes(undefined);
     }
 
-    btnListener() {       
+    btnListener() {
 
         $("#reset").on('click keypress', (e) => {
             if (confirm("Start a new quiz?") === true) {
@@ -67,12 +67,14 @@ export class Controller {
                 if (this.i <= this.reader.allQuestion.length) {
                     let valid = this.validation();
                     if (!valid.excluded || this.i === 0) {
-                        let pts = this.checkAnswer(valid.str, this.question.solution);
+                        let pts = this.checkAnswer(valid.str, this.question.solution, this.question.maxPts);
                         $(".ansPos").off('click');
                         this.startCount(5);
                         let delayNext = setTimeout(() => {
                             this.view.printSum("");
                             this.player.score += pts.pts;
+                            this.sumPercent += pts.percent;                            
+                            this.avgPercent = Math.round(this.sumPercent/this.reader.allQuestion.length*100)/100;
                             this.summary.push({
                                 input: valid.str,
                                 solution: this.question.solution,
@@ -80,6 +82,8 @@ export class Controller {
                                 wrong: pts.wrong,
                                 pts: pts.pts,
                                 maxPts: this.question.maxPts,
+                                percent: pts.percent,
+                                avgPercent: this.avgPercent,
                                 sumScore: this.player.score,
                                 maxScore: this.question.maxScore
                             });
@@ -88,7 +92,7 @@ export class Controller {
                                 $("#reset, #ok, #charInput").prop("disabled", false);
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                             } else {
-                                $("#reset").prop("disabled", false);
+                                $("#reset").prop("disabled", false);                                
                                 this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
                                 this.view.printEndRes(this.summary);
                             }
@@ -116,6 +120,8 @@ export class Controller {
                     $("#readFile").prop("disabled", true);
                     $("input[name='shuffle']").prop("disabled", true);
                     $("#restart").prop("disabled", true);
+                    this.avgPercent = 0;
+                    this.sumPercent = 0;
                     this.player.score = 0;
                     this.player.name = pName;
                     $("#charInput, #ok").prop("disabled", false);
@@ -151,7 +157,7 @@ export class Controller {
         cnt--;
     }
     start() {
-        this.i = 0;        
+        this.i = 0;
         this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, ($('#qShuffle').is(':checked')) ? true : false);
         this.nextQ(this.shuffleQ[this.i++]);
     }
@@ -193,7 +199,7 @@ export class Controller {
     }
 
     //parse question, answer, solution from json via index, shuffle position if true
-    nextQ(qNo) {        
+    nextQ(qNo) {
         let allQ = this.reader.allQuestion;
         let answerPos = "";
         let solution = "";
@@ -207,7 +213,7 @@ export class Controller {
         this.question.answer = answerKey;
         this.question.possibility = answerKey.length;
         this.question.solution = answerVal;
-        this.question.maxPts = answerVal;
+        this.question.maxPts = allQ[qNo].points;
         this.question.maxScore = allQ;
         this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
@@ -218,18 +224,27 @@ export class Controller {
     }
 
     /**
-     *      
-     * per right answer: 0.25pts
-     * per right answer: -0.25pts
-     * per no answer: 0pts
+     * grading system:
+     * 
+     * 100%: number of solutions
+     * max. achievable pts per question: defined in quizfile
+     * percentage per right answer (percentage/right answer): 100/number of solutions
+     *  
+     * per right answer: increment right
+     * per wrong answer: increment wrong        
+     * non-answered = no increment
+     * 
+     * sum = (percentage/right answer*(right - wrong)/100) * maxPts
      *  
      */
-    checkAnswer(input, solution) {
+    checkAnswer(input, solution, maxPts) {
         let sum = {
             pts: 0,
+            percent: 0,
             right: 0,
             wrong: 0
         }
+        let perAnswer = 100 / solution.length;
         let inputArr = input.split("");
         for (let i = 0; i < inputArr.length; i++) {
             if (solution.includes(inputArr[i])) {
@@ -238,10 +253,18 @@ export class Controller {
                 sum.wrong++;
             }
         }
-        sum.pts = .25 * (sum.right - sum.wrong);
+        sum.percent = Math.round(perAnswer * (sum.right - sum.wrong)*100)/100;
+        sum.pts = Math.round((sum.percent/100 * maxPts)*100)/100;
+        
         if (sum.pts < 0) {
             sum.pts = 0;
         }
+
+        if (sum.percent < 0) {
+            sum.percent = 0;
+        }
+        
+
         return sum;
     }
 

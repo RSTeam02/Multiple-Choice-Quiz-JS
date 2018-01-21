@@ -18,6 +18,17 @@ structure:
 
 progress:
 
+21.1.:
+new grading system  
++ show achieved score/points in percent
++ 100%: number of all (correct) solutions
++ max. achievable pts per question: defined in quizfile
++ percentage per right answer (percentage/answer): 100/number of solutions       
++ per right answer: increment right
++ per wrong answer: increment wrong        
++ non-answered = no increment      
++ achieved points: (percentage/ right answer*(right - wrong)/100) * maxPts (round by 2 digits)
+
 18.1.:
 + browse/load custom json quizfile from local disk 
 + structure (see above or quizfile.json)  
