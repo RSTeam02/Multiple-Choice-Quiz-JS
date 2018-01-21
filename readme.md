@@ -7,6 +7,7 @@ structure:
 [
     {
         "quiz": "99 is equal to:",
+        "points": 1,
         "answer": {
             "3*30+3²": "+",
             "2*33": "-",
@@ -26,7 +27,7 @@ new grading system
 + percentage per right answer (percentage/answer): 100/number of solutions       
 + per right answer: increment right
 + per wrong answer: increment wrong        
-+ non-answered = no increment      
++ non-answered: no increment      
 + achieved points: (percentage/ right answer*(right - wrong)/100) * maxPts (round by 2 digits)
 
 18.1.:
