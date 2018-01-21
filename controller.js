@@ -73,8 +73,8 @@ export class Controller {
                         let delayNext = setTimeout(() => {
                             this.view.printSum("");
                             this.player.score += pts.pts;
-                            this.sumPercent += pts.percent;                            
-                            this.avgPercent = Math.round(this.sumPercent/this.reader.allQuestion.length*100)/100;
+                            this.sumPercent += pts.percent;
+                            this.avgPercent = this.sumPercent / this.reader.allQuestion.length;
                             this.summary.push({
                                 input: valid.str,
                                 solution: this.question.solution,
@@ -92,7 +92,7 @@ export class Controller {
                                 $("#reset, #ok, #charInput").prop("disabled", false);
                                 this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
                             } else {
-                                $("#reset").prop("disabled", false);                                
+                                $("#reset").prop("disabled", false);
                                 this.view.printInfo(`${this.player.name}'s final score: ${this.player.score}/${this.question.maxScore}`);
                                 this.view.printEndRes(this.summary);
                             }
@@ -253,17 +253,13 @@ export class Controller {
                 sum.wrong++;
             }
         }
-        sum.percent = Math.round(perAnswer * (sum.right - sum.wrong)*100)/100;
-        sum.pts = Math.round((sum.percent/100 * maxPts)*100)/100;
-        
-        if (sum.pts < 0) {
-            sum.pts = 0;
+        sum.percent = perAnswer * (sum.right - sum.wrong);
+        sum.pts = sum.percent / 100 * maxPts;
+
+        if (sum.pts < 0 || sum.percent < 0) {
+            sum.percent = sum.pts = 0;
         }
 
-        if (sum.percent < 0) {
-            sum.percent = 0;
-        }
-        
 
         return sum;
     }

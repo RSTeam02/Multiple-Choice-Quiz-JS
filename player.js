@@ -6,7 +6,7 @@ export class Player{
     }
 
     get score(){
-        return this._score;
+        return Math.round(this._score * 100)/100;
     }
 
     set name(name){

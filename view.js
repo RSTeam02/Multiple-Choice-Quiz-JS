@@ -49,14 +49,14 @@ export class View {
                     <td>${strArr[i].solution}</td> 
                     <td>${strArr[i].right}/${strArr[i].solution.length}</td> 
                     <td>${strArr[i].wrong}</td>
-                    <td>${strArr[i].percent}%</td>
+                    <td>${Math.round(strArr[i].percent * 100) / 100}%</td>
                     <td>${strArr[i].pts}/${strArr[i].maxPts}</td>
                 </tr>`;
                 if (i === strArr.length - 1) {
                     str += `<tr>                
                         <td>Total</td>
                         <td colspan="4%"></td>
-                        <td>${strArr[i].avgPercent}%</td>
+                        <td>${Math.round(strArr[i].avgPercent * 100) / 100}%</td>
                         <td>${strArr[i].sumScore}/${strArr[i].maxScore}</td>
                     </tr>`;
                 }
