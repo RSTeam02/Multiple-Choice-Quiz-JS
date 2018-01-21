@@ -50,7 +50,7 @@ export class View {
                     <td>${strArr[i].right}/${strArr[i].solution.length}</td> 
                     <td>${strArr[i].wrong}</td>
                     <td>${Math.round(strArr[i].percent * 100) / 100}%</td>
-                    <td>${strArr[i].pts}/${strArr[i].maxPts}</td>
+                    <td>${Math.round(strArr[i].pts * 100) / 100}/${strArr[i].maxPts}</td>
                 </tr>`;
                 if (i === strArr.length - 1) {
                     str += `<tr>                

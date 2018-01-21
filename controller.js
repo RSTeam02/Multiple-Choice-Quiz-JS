@@ -98,7 +98,7 @@ export class Controller {
                             }
                             this.i++;
                         }, 5000);
-                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${pts.pts}/${this.question.maxPts}`);
+                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${Math.round(pts.pts * 100) / 100}/${this.question.maxPts}`);
                     } else {
                         $("#reset, #ok, #charInput").prop("disabled", false);
                         $(".ansPos").css("background-color", "transparent");
