@@ -19,6 +19,10 @@ structure:
 
 progress:
 
+23.1.:
+
++ highlight answers (change bg color) when entered answer via input text  
+
 21.1.:
 new grading system  
 + show achieved score/points in percent

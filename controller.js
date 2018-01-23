@@ -13,6 +13,7 @@ import { Question } from "./question.js";
 
 export class Controller {
     constructor() {
+        this.resetInput = false;
         this.reader = new JSONFileReader();
         this.view = new View();
         this.rnd = new Shuffle();
@@ -46,7 +47,7 @@ export class Controller {
 
     btnListener() {
 
-        $("#reset").on('click keypress', (e) => {
+        $("#reset").on('click keypress', () => {
             if (confirm("Start a new quiz?") === true) {
                 this.firstInit();
             }
@@ -60,80 +61,103 @@ export class Controller {
 
         $("#ok, #charInput").on('click keypress', (e) => {
             this.view.errInfo("");
-            //parse next       
-            if (e.which == 13 || e.currentTarget.id === "ok") {
-                this.letterStr = "";
-                $("#reset, #ok, #charInput").prop("disabled", true);
-                if (this.i <= this.reader.allQuestion.length) {
-                    let valid = this.validation();
-                    if (!valid.excluded || this.i === 0) {
-                        let pts = this.checkAnswer(valid.str, this.question.solution, this.question.maxPts);
-                        $(".ansPos").off('click');
-                        this.startCount(5);
-                        let delayNext = setTimeout(() => {
-                            this.view.printSum("");
-                            this.player.score += pts.pts;
-                            this.sumPercent += pts.percent;
-                            this.avgPercent = this.sumPercent / this.reader.allQuestion.length;
-                            this.summary.push({
-                                input: valid.str,
-                                solution: this.question.solution,
-                                right: pts.right,
-                                wrong: pts.wrong,
-                                pts: pts.pts,
-                                maxPts: this.question.maxPts,
-                                percent: pts.percent,
-                                avgPercent: this.avgPercent,
-                                sumScore: this.player.score,
-                                maxScore: this.question.maxScore
-                            });
-                            if (this.i !== this.reader.allQuestion.length) {
-                                this.nextQ(this.shuffleQ[this.i]);
-                                $("#reset, #ok, #charInput").prop("disabled", false);
-                                this.view.printInfo(`${this.player.name}'s score: ${Math.round(this.player.score * 100) / 100}pts.`);
-                            } else {
-                                $("#reset").prop("disabled", false);
-                                this.view.printInfo(`${this.player.name}'s final score: ${Math.round(this.player.score * 100) / 100}/${this.question.maxScore}`);
-                                this.view.printEndRes(this.summary);
-                            }                         
-                            this.i++;
-                        }, 5000);
-                        this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${Math.round(pts.pts * 100) / 100}/${this.question.maxPts}`);
-                    } else {
-                        $("#reset, #ok, #charInput").prop("disabled", false);
-                        $(".ansPos").css("background-color", "transparent");
-                        this.view.errInfo(valid.str);
-                    }
-                }
-                $("#charInput").val("");
+            if (e.keyCode === 13 || e.currentTarget.id === "ok") {
+                this.parseNext();
             }
             $("#charInput").focus();
         });
 
+        $("#charInput").on('click keyup', (e) => {
+            this.enterAns();
+        });
 
-        $("#restart").on('click keypress', (e) => {
+        $("#restart").on('click keypress', () => {
             this.view.errInfo("");
-            //(re)start
-            if (e.currentTarget.id === "restart") {
-                var pName = prompt("Enter your name: ", "Player1");
-                if (pName !== null) {
-                    $("#readFile").prop("disabled", true);
-                    $("input[name='shuffle']").prop("disabled", true);
-                    $("#restart").prop("disabled", true);
-                    this.avgPercent = 0;
-                    this.sumPercent = 0;
-                    this.player.score = 0;
-                    this.player.name = pName;
-                    $("#charInput, #ok").prop("disabled", false);
-                    this.start();
-                    this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
-                }
+            //(re)start           
+            var pName = prompt("Enter your name: ", "Player1");
+            if (pName !== null) {
+                $("#readFile").prop("disabled", true);
+                $("input[name='shuffle']").prop("disabled", true);
+                $("#restart").prop("disabled", true);
+                this.avgPercent = 0;
+                this.sumPercent = 0;
+                this.player.score = 0;
+                this.player.name = pName;
+                $("#charInput, #ok").prop("disabled", false);
+                this.start();
+                this.view.printInfo(`${this.player.name}'s score: ${this.player.score}pts.`);
             }
-
         });
     }
 
-    clickNext(target) {
+    parseNext() {
+        this.letterStr = "";
+        $("#reset, #ok, #charInput").prop("disabled", true);
+        if (this.i <= this.reader.allQuestion.length) {
+            let valid = this.validation();
+            if (!valid.excluded || this.i === 0) {
+                let pts = this.checkAnswer(valid.str, this.question.solution, this.question.maxPts);
+                $(".ansPos").off('click');
+                this.startCount(5);
+                let delayNext = setTimeout(() => {
+                    this.view.printSum("");
+                    this.player.score += pts.pts;
+                    this.sumPercent += pts.percent;
+                    this.avgPercent = this.sumPercent / this.reader.allQuestion.length;
+                    this.summary.push({
+                        input: valid.str,
+                        solution: this.question.solution,
+                        right: pts.right,
+                        wrong: pts.wrong,
+                        pts: pts.pts,
+                        maxPts: this.question.maxPts,
+                        percent: pts.percent,
+                        avgPercent: this.avgPercent,
+                        sumScore: this.player.score,
+                        maxScore: this.question.maxScore
+                    });
+                    if (this.i !== this.reader.allQuestion.length) {
+                        this.nextQ(this.shuffleQ[this.i]);
+                        $("#reset, #ok, #charInput").prop("disabled", false);
+                        this.view.printInfo(`${this.player.name}'s score: ${Math.round(this.player.score * 100) / 100}pts.`);
+                    } else {
+                        $("#reset").prop("disabled", false);
+                        this.view.printInfo(`${this.player.name}'s final score: ${Math.round(this.player.score * 100) / 100}/${this.question.maxScore}`);
+                        this.view.printEndRes(this.summary);
+                    }
+                    this.i++;
+                }, 5000);
+                this.view.printSum(`Your input: ${valid.str}\nSolution: ${this.question.solution}\nPoints: ${Math.round(pts.pts * 100) / 100}/${this.question.maxPts}`);
+            } else {
+                $("#reset, #ok, #charInput").prop("disabled", false);
+                $(".ansPos").css("background-color", "transparent");
+                this.view.errInfo(valid.str);
+            }
+        }
+        $("#charInput").val("");
+    }
+
+    //highlight answers when using keyboard
+    enterAns() {
+        this.resetInput = true;
+        $(".ansPos").css("background-color", "transparent");
+        for (let i = 0; i < this.question.solution.length; i++) {
+            for (let j = 0; j < $("#charInput").val().length; j++) {
+                if (this.question.possibility.includes($("#charInput").val()[j].toUpperCase())) {
+                    $("#" + $("#charInput").val()[j].toUpperCase()).css("background-color", "lightgreen");
+                }
+            }
+        }
+    }
+
+    //highlight answers when using mouse, reset input if keyboard used before
+    clickAns(target) {
+        if (this.resetInput) {
+            $(".ansPos").css("background-color", "transparent");
+            $("#charInput").val("");
+            this.resetInput = false;
+            this.letterStr = "";
+        }
         if (this.letterStr.includes(target.getAttribute("value"))) {
             this.letterStr = this.letterStr.replace(new RegExp(target.getAttribute("value"), "g"), "");
             $(target).css("background-color", "transparent");
@@ -156,6 +180,7 @@ export class Controller {
         }
         cnt--;
     }
+
     start() {
         this.i = 0;
         this.shuffleQ = this.rnd.randPos(this.reader.allQuestion.length, ($('#qShuffle').is(':checked')) ? true : false);
@@ -188,6 +213,7 @@ export class Controller {
                 res.excluded = true;
             }
         }
+
         if (!res.excluded) {
             for (let i = 0; i < charInput.length; i++) {
                 if (charInput[i] !== charInput[i + 1]) {
@@ -218,7 +244,7 @@ export class Controller {
         this.view.printQuestion(this.question.question);
         this.view.printAnswer(this.question.answer);
         $(".ansPos").on('click', (e) => {
-            this.clickNext(e.currentTarget);
+            this.clickAns(e.currentTarget);
             this.view.errInfo("");
         });
     }
