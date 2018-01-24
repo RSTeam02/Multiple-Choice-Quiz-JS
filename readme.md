@@ -19,6 +19,24 @@ structure:
 
 progress:
 
+24.1.:
++ differentiate between single and multiple choice question
++ UI and input text will allow only one choice, if single choice
++ here is an example for a single choice quiz, only one answer could be right:
+```
+[
+    {        
+        "quiz": "Napoleon Bonaparte was born on:",
+        "points": 1,
+        "answer": {
+            "15.08.1869": "-",
+            "15.08.1769": "+",
+            "15.08.1969": "-"
+        }
+    },  ...
+]  
+```
+
 23.1.:
 
 + highlight answers (change bg color) when entered answer via input text  

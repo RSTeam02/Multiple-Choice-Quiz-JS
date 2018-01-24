@@ -1,5 +1,14 @@
 [
     {
+        "quiz": "Napoleon Bonaparte was born on:",
+        "points": 1,
+        "answer": {
+            "15.08.1869": "-",
+            "15.08.1769": "+",
+            "15.08.1969": "-"
+        }
+    },
+    {
         "quiz": "99 is equal to:",
         "points": 1,
         "answer": {
@@ -7,7 +16,7 @@
             "2*33": "-",
             "11*9": "+"
         }
-    },   
+    },
     {
         "quiz": "Which color component(s) contain(s) the RGB color space?",
         "points": 1.5,

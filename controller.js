@@ -69,6 +69,10 @@ export class Controller {
 
         $("#charInput").on('click keyup', (e) => {
             this.enterAns();
+        }).on('keypress', ()=>{
+            if($("#charInput").val().length === 1 && this.question.solution.length === 1){
+                $("#charInput").val("");
+            }
         });
 
         $("#restart").on('click keypress', () => {
@@ -139,7 +143,7 @@ export class Controller {
 
     //highlight answers when using keyboard
     enterAns() {
-        this.resetInput = true;
+        this.resetInput = true;        
         $(".ansPos").css("background-color", "transparent");
         for (let i = 0; i < this.question.solution.length; i++) {
             for (let j = 0; j < $("#charInput").val().length; j++) {
@@ -157,14 +161,20 @@ export class Controller {
             $("#charInput").val("");
             this.resetInput = false;
             this.letterStr = "";
-        }
-        if (this.letterStr.includes(target.getAttribute("value"))) {
-            this.letterStr = this.letterStr.replace(new RegExp(target.getAttribute("value"), "g"), "");
-            $(target).css("background-color", "transparent");
-        } else {
-            this.letterStr += target.getAttribute("value");
-            $(target).css("background-color", "lightgreen");
-        }
+        }  
+        if(this.question.solution.length !== 1){
+            if (this.letterStr.includes(target.getAttribute("value"))) {
+                this.letterStr = this.letterStr.replace(new RegExp(target.getAttribute("value"), "g"), "");
+                $(target).css("background-color", "transparent");
+            } else {
+                this.letterStr += target.getAttribute("value");
+                $(target).css("background-color", "lightgreen");
+            }
+        }else{
+            $(".ansPos").css("background-color", "transparent");  
+            this.letterStr = target.getAttribute("value");
+            $(target).css("background-color", "lightgreen");            
+        }       
         $("#charInput").val(this.letterStr.split("").sort().join(""));
     }
 
